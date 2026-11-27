@@ -492,8 +492,9 @@ primary colour of the client theme.
 - `assets/proxy/brand.js` sets the name, the accent colour and the texts of the phone pages that
   differ from SIPMediaGW, in all their languages. `assets/proxy/favicon.svg` is the icon of the
   phone pages.
-- `allPlatforms` in `assets/gateway/IVR/index.html` and `assets/proxy/brand.js` is the name of the
-  full list of the instances: `Federation`. Change it for a list of your own.
+- `allPlatforms` is the name of the full list of the instances: `Federation` on the room screen
+  (`assets/gateway/IVR/index.html`), and in each language of the phone pages
+  (`assets/proxy/brand.js`). Change them for a list of your own.
 
 After a change, run `build-assets.sh` on the central host and restart the `proxy` container. Each
 gateway reads the assets when its container starts.
