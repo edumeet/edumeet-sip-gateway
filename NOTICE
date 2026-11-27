@@ -1,0 +1,25 @@
+eduMEET SIP gateway
+Copyright 2026 eduMEET contributors
+
+Licensed under the Apache License 2.0. See LICENSE.
+
+This repository contains deployment files for SIPMediaGW
+(https://github.com/Renater/SIPMediaGW), developed by RENATER and licensed under
+the Apache License 2.0. These files are copied from SIPMediaGW or derived from it:
+
+- assets/gateway/IVR/index.html: derived from browsing/assets/IVR/index.html (loads edumeet.css)
+- assets/proxy/brand.js: derived from deploy/proxyAPI/brand.js (service name and accent colour changed)
+- central/proxy.env.example: derived from deploy/proxyAPI/.env
+- gateway-host/sipmediagw.env: derived from .env (see the header of the file)
+- gateway-host/start.sh: derived from deploy/services/start_all_gateways.bash
+  (see the header of the file)
+
+The branding comes from edumeet-client (https://github.com/edumeet/edumeet-client):
+assets/gateway/IVR/logo.svg is the light eduMEET logo, assets/proxy/favicon.svg
+contains the eduMEET app icon, and the colours in assets/gateway/IVR/edumeet.css and
+assets/proxy/brand.js are the client theme defaults.
+
+assets/gateway/IVR/platform_en.mp3 and assets/gateway/IVR/conference_en.mp3 are made
+with Piper and the voice en_GB-alba-medium, licensed under CC BY 4.0: dataset
+https://datashare.ed.ac.uk/handle/10283/3270, base model trained on the NVIDIA
+Hi-Fi TTS dataset.

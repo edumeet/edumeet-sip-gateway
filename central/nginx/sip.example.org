@@ -1,0 +1,51 @@
+server {
+	server_name sip.example.org;
+	server_tokens off;
+
+	location / {
+		proxy_pass http://127.0.0.1:9000;
+		proxy_set_header Host $host;
+		# Replaces any X-Forwarded-For sent by the client: the proxy rate-limits
+		# pairing attempts by the first address in this header (PROXY_TRUST_FORWARDED).
+		proxy_set_header X-Forwarded-For $remote_addr;
+		proxy_set_header X-Forwarded-Proto https;
+		# The proxy builds the redirect after pairing from the URL it gets, which is http.
+		proxy_redirect http://$host/ https://$host/;
+	}
+
+	# The pairing page is the start page: the portal page of the proxy is not used.
+	location = / {
+		return 302 /pairing$is_args$args;
+	}
+	location = /portal {
+		return 302 /pairing$is_args$args;
+	}
+
+	# The proxy also looks a gateway up by meeting room (/status?room=, /progress) and
+	# answers with its gateway id, which controls the room system through /command.
+	# Only the lookup by gateway id, which the phone page uses, reaches the proxy.
+	location = /status {
+		proxy_pass http://127.0.0.1:9000/status?gw_id=$arg_gw_id;
+		proxy_set_header Host $host;
+		proxy_set_header X-Forwarded-For $remote_addr;
+		proxy_set_header X-Forwarded-Proto https;
+	}
+	location = /progress {
+		return 403;
+	}
+
+	listen 443 ssl;
+	add_header Strict-Transport-Security "max-age=31536000" always;
+	ssl_certificate /etc/letsencrypt/live/sip.example.org/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/sip.example.org/privkey.pem;
+	include /etc/letsencrypt/options-ssl-nginx.conf;
+	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+server {
+	server_name sip.example.org;
+	server_tokens off;
+
+	listen 80;
+	return 301 https://$host$request_uri;
+}

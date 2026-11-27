@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>eduMEET</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="edumeet.css" />
+  <script>
+    // eduMEET meetings are rooms with names: the phone is the way to type them.
+    window.ivrBrand = {
+      allPlatforms: 'Federation',
+      prompts: {
+        en: {
+          domain: 'Choose your organisation on your phone (QR code)<br>or enter its number, then #',
+          room: 'Type the room name on your phone<br><span class="sub">Scan the QR code, or open the link under it and enter the code</span>'
+        }
+      },
+      messages: {
+        en: {
+          chosenDomain: (id, name) => `Organisation selected (${id}): ${name}`,
+          keypad: (enter, all) => (all ? `Keypad: 0 # ${all}` : '')
+        }
+      }
+    };
+  </script>
+</head>
+<body>
+    <!-- SPLASH SCREEN -->
+    <div id="bg"></div>
+    <div id="splash">
+      <img src="logo.svg" alt="logo" id="splash-logo">
+    </div>
+
+    <!-- MAIN UI -->
+    <div id="main" class="hidden ">
+      <div id="message"></div>
+      <div id="domains" class="hidden"></div>
+      <div id="digits" contenteditable="true" spellcheck="false">_____</div>
+      <div id="status"></div>
+      <div id="domain-status"></div>
+ </div>
+  <script>
+  // Splash → logo → main UI
+  setTimeout(() => {
+    const splash = document.getElementById("splash");
+    const logo   = document.getElementById("splash-logo");
+    const main   = document.getElementById("main");
+
+    // Move logo to the corner
+    logo.classList.add("move-to-corner");
+
+    // Fade-in background
+    document.getElementById("bg").classList.add("visible");
+
+    setTimeout(() => {
+      main.classList.remove("hidden");
+      main.classList.add("fade-in");
+    }, 500);
+
+    // Load ivr.js
+    const script = document.createElement("script");
+    script.src = "ivr.js";
+    script.type = "module";
+    script.onload = () => {
+      splash.style.background = "transparent";
+      splash.style.pointerEvents = "none";
+    };
+    document.body.appendChild(script);
+
+  }, 2200);
+  </script>
+
+</body>
+</html>

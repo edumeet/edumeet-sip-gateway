@@ -1,0 +1,17 @@
+[Unit]
+Description=eduMEET SIP gateways (SIPMediaGW)
+Requires=docker.service
+After=docker.service network-online.target edumeet-sip-turn-credentials.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+EnvironmentFile=/etc/edumeet-sip-gateway/gateway.env
+ExecStart=@REPO_DIR@/gateway-host/start.sh
+ExecStop=/bin/bash ${SIPMEDIAGW_DIR}/deploy/services/stop_all_gateways.bash
+TimeoutStartSec=900
+TimeoutStopSec=120
+
+[Install]
+WantedBy=multi-user.target

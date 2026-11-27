@@ -1,0 +1,67 @@
+name: edumeet-sip-central
+
+services:
+  kamailio:
+    image: edumeet-sip-kamailio:local
+    pull_policy: never
+    container_name: kamailio
+    restart: unless-stopped
+    network_mode: host
+    logging:
+      driver: syslog
+      options:
+        tag: kamailio
+    env_file:
+      - kamailio.env
+      - kamailio-credentials.env
+      - mysql.env
+    volumes:
+      - ./tls:/etc/kamailio/tls:ro
+    depends_on:
+      kamailio-db:
+        condition: service_healthy
+    entrypoint:
+      - /bin/sh
+      - -c
+      - printenv > /etc/environment && cron && kamailioRun
+
+  kamailio-db:
+    image: mysql:8.4
+    container_name: kamailioDB
+    restart: unless-stopped
+    env_file:
+      - mysql.env
+    volumes:
+      - kamailio_db:/var/lib/mysql
+      - ${SIPMEDIAGW_DIR:?}/deploy/kamailio/db_healthcheck.sh:/usr/local/bin/db_healthcheck:ro
+    ports:
+      - 127.0.0.1:3306:3306
+    healthcheck:
+      test: db_healthcheck
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: unless-stopped
+
+  proxy:
+    image: edumeet-sip-proxy:local
+    pull_policy: never
+    container_name: proxy
+    restart: unless-stopped
+    env_file:
+      - proxy.env
+    volumes:
+      - ../assets/proxy/brand.js:/app/brand.js:ro
+      - ../assets/proxy/favicon.svg:/app/favicon.svg:ro
+      - ../build/assets.tar.xz:/app/assets/assets.tar.xz:ro
+    depends_on:
+      - redis
+    ports:
+      - 127.0.0.1:9000:80
+
+volumes:
+  kamailio_db:

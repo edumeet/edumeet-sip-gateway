@@ -1,0 +1,97 @@
+/* eduMEET branding for the room screen, from the eduMEET client theme defaults. */
+
+#bg {
+  background: linear-gradient(135deg, rgba(1, 42, 74, 1) 0%, rgba(1, 58, 99, 1) 50%, rgba(1, 73, 124, 1) 100%);
+}
+
+body,
+#message {
+  color: #fff;
+}
+
+#status,
+#pages,
+#keypad-help {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* The logo is small in the corner: the platform prompt keeps two lines and the list stays clear of
+   the pairing code. */
+#message {
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#countdown {
+  text-align: center;
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+#countdown.ending {
+  color: #ffb74d;
+  font-weight: 600;
+}
+
+#digits.active {
+  border-color: #1976d2;
+}
+
+/* A platform number of two digits stays on one line: the field grows with the input. */
+#digits {
+  width: fit-content;
+  max-width: none;
+  white-space: nowrap;
+}
+
+/* The room name keeps the wide field of the room step. */
+#digits.room-mode {
+  width: auto;
+  max-width: 30ch;
+}
+
+#domains .domain-id {
+  background: #1976d2;
+}
+
+/* The list of the federation reaches the top of the screen: the logo stays small in the corner.
+   The splash animation keeps translate(-50%, -50%), so top and left place the centre of the logo. */
+#splash-logo.move-to-corner {
+  top: 44px;
+  left: 124px;
+  width: 200px;
+}
+
+/* Rows of four keep a page of 20 instances clear of the logo and the pairing code on a 720p screen.
+   The box fits its columns; a list shorter than a row is one line in the middle. */
+#domains {
+  --page-size: 20;
+  display: grid;
+  grid-template-columns: repeat(4, 240px);
+  column-gap: 12px;
+  justify-content: center;
+  /* The last page keeps the height of the first one: its rows stay at the top. */
+  align-content: start;
+  width: fit-content;
+  max-width: min(1060px, 86vw);
+  box-sizing: border-box;
+}
+
+#domains:not(:has(> :nth-child(4))) {
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: 240px;
+}
+
+/* Compact lines: the list ends above the pairing code. */
+#domains .domain-item {
+  margin: 2px 0 !important;
+  padding: 4px 8px !important;
+  box-sizing: border-box;
+}
+
+/* Every instance is an eduMEET one: the same icon on each line leaves less room for the name. */
+#domains .domain-item img {
+  display: none;
+}
