@@ -231,11 +231,12 @@ The gateway hosts do not need an entry: they register with Kamailio with `SIP_SE
 
 ### Block SIP scanners
 
-SIP scanners call public SIP servers without end, about once a second, from addresses outside the
-address table. Kamailio refuses each call, and fail2ban blocks SIP (5060 and 5061, TCP and UDP)
-from an address with 30 refusals in 10 minutes, for one day. Kamailio never refuses the addresses
-in the table, so fail2ban never blocks them. A room system that is not in the table yet is refused
-once per call.
+SIP scanners call public SIP servers without end from addresses outside the address table: fast
+ones about once a second, slow ones a few times an hour. Kamailio refuses each call, and fail2ban
+blocks SIP (5060 and 5061, TCP and UDP) from an address with 30 refusals in 10 minutes for one day
+(jail `kamailio-refused`), and from an address with 20 refusals in a day for a week (jail
+`kamailio-refused-slow`). Kamailio never refuses the addresses in the table, so fail2ban never
+blocks them. A room system that is not in the table yet is refused once per call.
 
 On the central host:
 
@@ -245,11 +246,13 @@ ln -sf /root/edumeet-sip-gateway/central/fail2ban/filter.d/kamailio-refused.conf
 ln -sf /root/edumeet-sip-gateway/central/fail2ban/jail.d/kamailio-refused.conf /etc/fail2ban/jail.d/
 systemctl restart fail2ban
 fail2ban-client status kamailio-refused
+fail2ban-client status kamailio-refused-slow
 ```
 
 The package also blocks SSH from addresses with failed logins (its `sshd` jail). An address that
 you add to the table stays blocked until its ban ends:
-`fail2ban-client set kamailio-refused unbanip 192.0.2.10` ends it now.
+`fail2ban-client set kamailio-refused unbanip 192.0.2.10` and
+`fail2ban-client set kamailio-refused-slow unbanip 192.0.2.10` end it now.
 
 ## TURN on a media node
 
