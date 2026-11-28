@@ -254,6 +254,9 @@ you add to the table stays blocked until its ban ends:
 `fail2ban-client set kamailio-refused unbanip 192.0.2.10` and
 `fail2ban-client set kamailio-refused-slow unbanip 192.0.2.10` end it now.
 
+`central/banned.sh` shows, as root, the addresses that each jail blocks now and when each ban
+ends.
+
 ## TURN on a media node
 
 The gateways use coturn on an eduMEET media node. coturn must run with `--use-auth-secret`.
